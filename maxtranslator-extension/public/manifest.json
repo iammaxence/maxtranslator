@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Max translator",
+  "description": "A free translator extension",
+  "version": "1.0",
+  "permissions": ["scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "translate-icon.png"
+  }
+}
