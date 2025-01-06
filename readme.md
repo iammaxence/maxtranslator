@@ -3,6 +3,10 @@
 ## About
 This is a chrome extension to translate any text online.
 
+![translate-button.png](translate-button.png)
+
+![translated-text.png](translated-text.png)
+
 ## Requirement
 1. Docker to run the server locally
 
@@ -20,3 +24,9 @@ This is a chrome extension to translate any text online.
 1. Underline text.
 2. Click on the translation icon that appear.
 3. The translation is display.
+
+## TODO
+1. Refactor index.ts to separate icon view
+2. Add global css variable for primary and secondary colors
+3. Add lang selection !
+4. Better UI maybe ?
