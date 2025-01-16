@@ -20,9 +20,29 @@
     padding: 0.5rem 1rem;
   }
 
+  .text-container--top--lang--wrapper {
+      position: relative;
+  }
+
+  .text-container--top--lang-list {
+      position: absolute;
+      background-color: white;
+      max-height: 10rem;
+      overflow: auto;
+      margin: 0;
+      padding: 0;
+
+      > li {
+          text-decoration: none;
+          padding: 1rem;
+      }
+  }
+
   .text-container--bottom {
     display: grid;
     grid-template-columns: repeat(2, 10rem);
+    max-height: 10rem;
+    overflow: auto;
 
     > .text-container--selected-text {
         border-right: solid 1px;
@@ -35,8 +55,15 @@
 </style>
 <div class="text-container">
   <div class="text-container--top">
-    <span>auto</span>
-    <span>french</span>
+    <img id="logo" width="20" height="20" alt="logo">
+    <div>
+      <span>auto</span>
+      ->
+      <div class="text-container--top--lang--wrapper">
+        <span id="selected-lang">french</span>
+        <ul id="lang-list" class="text-container--top--lang-list"></ul>
+      </div>
+    </div>
   </div>
   <div class="text-container--bottom">
     <span class="text-container--selected-text"></span>

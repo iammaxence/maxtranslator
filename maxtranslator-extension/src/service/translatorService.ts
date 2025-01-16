@@ -1,9 +1,8 @@
 import {Translation} from "../domain/Translation";
+import {Lang} from "../domain/Lang";
 
 
 export class TranslatorService {
-
-  private constructor() {}
 
   public static async translation(text: string, langSrc: string = 'auto', langTarget: string = 'fr'): Promise<Translation> {
     const res = await fetch("http://localhost:5000/translate", {
@@ -15,6 +14,15 @@ export class TranslatorService {
       }),
       headers: { "Content-Type": "application/json" },
     });
+
+    return await res.json();
+  }
+
+  public static async getAllLang(): Promise<Lang[]> {
+    const res = await fetch("http://localhost:5000/languages", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
 
     return await res.json();
   }

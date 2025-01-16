@@ -1,8 +1,17 @@
 import {Position} from "./domain/Position";
 import { TranslatorService } from "./service/translatorService";
 
-// Outside click
-document.addEventListener("click", (event) => {
+window.addEventListener("load", function(){
+  const imgTag = document.getElementById('logo') as HTMLImageElement || null;
+  console.log("IMAGE : "+ document.getElementById('logo'));
+  if(imgTag){
+    imgTag.src = chrome.runtime.getURL('assets/resource/translate-icon.png');
+  }
+});
+
+document.addEventListener("click", async (event) => {
+  // Outside click
+
   const translateIcon = document.getElementById('translate-icon')
   if (!window.getSelection()?.toString().trim() && translateIcon) {
     removeTranslateIcon();
@@ -11,6 +20,23 @@ document.addEventListener("click", (event) => {
   const existingTextContainer = document.querySelector('.text-container');
   if(existingTextContainer && !existingTextContainer.contains(event.target as Node)) {
     removeTextContainer();
+  }
+
+  // Display all lang
+  const selectedLang = document.getElementById("selected-lang");
+  if(selectedLang && selectedLang.contains(event.target as Node)){
+    console.log('Click on selected lang')
+    const allLang = await TranslatorService.getAllLang();
+    const ul = document.getElementById('lang-list');
+    if(ul && !ul.hasChildNodes()) {
+      console.log('ADD lis')
+      allLang.forEach(lang => {
+        const li = document.createElement('li');
+        li.id = lang.name;
+        li.textContent = lang.name;
+        ul.appendChild(li);
+      })
+    }
   }
 });
 

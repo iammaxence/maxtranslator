@@ -7,7 +7,7 @@
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "index.html",
-    "default_icon": "assets/translate-icon.png"
+    "default_icon": "assets/resource/translate-icon.png"
   },
   "background": {
     "type": "module"
@@ -20,7 +20,11 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/component/translatorContainer.html", "src/component/translate-button/translateButton.html"],
+      "resources": [
+        "src/component/translatorContainer.html",
+        "src/component/translate-button/translateButton.html",
+        "assets/resource/translate-icon.png"
+      ],
       "matches": ["<all_urls>"]
     }
   ]
