@@ -23,7 +23,8 @@
       "resources": [
         "src/component/translatorContainer.html",
         "src/component/translate-button/translateButton.html",
-        "assets/resource/translate-icon.png"
+        "assets/resource/translate-icon.png",
+        "assets/resource/transfer-icon.png"
       ],
       "matches": ["<all_urls>"]
     }

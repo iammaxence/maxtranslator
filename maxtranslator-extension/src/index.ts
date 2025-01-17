@@ -1,26 +1,8 @@
 import {Position} from "./domain/Position";
 import { TranslatorService } from "./service/translatorService";
 
-window.addEventListener("load", function(){
-  const imgTag = document.getElementById('logo') as HTMLImageElement || null;
-  console.log("IMAGE : "+ document.getElementById('logo'));
-  if(imgTag){
-    imgTag.src = chrome.runtime.getURL('assets/resource/translate-icon.png');
-  }
-});
-
 document.addEventListener("click", async (event) => {
-  // Outside click
-
-  const translateIcon = document.getElementById('translate-icon')
-  if (!window.getSelection()?.toString().trim() && translateIcon) {
-    removeTranslateIcon();
-  }
-
-  const existingTextContainer = document.querySelector('.text-container');
-  if(existingTextContainer && !existingTextContainer.contains(event.target as Node)) {
-    removeTextContainer();
-  }
+  closePopUpOnOutsideClick(event);
 
   // Display all lang
   const selectedLang = document.getElementById("selected-lang");
@@ -44,41 +26,68 @@ document.addEventListener('mouseup', () => {
   const selectedText = window.getSelection()?.toString().trim();
 
   if(selectedText) {
-    const selectedTextPosition = getPositionNearToSelection();
+    const selectedTextPosition = getPositionNearSelection();
     const translateIcon = getTranslateIcon(selectedTextPosition);
 
     translateIcon.addEventListener("click", async () => {
+      // Retrieve html translation container
       const translation = await TranslatorService.translation(selectedText);
+      const translatorContainerHtml = await fetchHtml("src/component/translatorContainer.html");
+      const container = buildTranslatorContainer(translatorContainerHtml, selectedTextPosition.x, selectedTextPosition.y);
 
-      fetch(chrome.runtime.getURL("src/component/translatorContainer.html"))
-        .then((response) => response.text())
-        .then((html) => {
-          const container = document.createElement("div");
-          container.style.position = "absolute";
+      // Add the html to the DOM
+      document.body.appendChild(container);
 
-          container.style.left = `${selectedTextPosition.x}px`;
-          container.style.top = `${selectedTextPosition.y}px`;
-          container.innerHTML = html;
+      // Insert translation into the html
+      const thirdSpan = container.querySelector(".text-container--selected-text");
+      const fourthSpan = container.querySelector(".text-container--translated-text");
+      if(thirdSpan && fourthSpan) {
+        thirdSpan.textContent = selectedText; // Replace with actual text
+        fourthSpan.textContent = translation.translatedText; // Replace with translation
+      }
 
-          document.body.appendChild(container);
-
-          const thirdSpan = container.querySelector(".text-container--selected-text");
-          const fourthSpan = container.querySelector(".text-container--translated-text");
-
-          if(thirdSpan && fourthSpan) {
-            thirdSpan.textContent = selectedText; // Replace with actual text
-            fourthSpan.textContent = translation.translatedText; // Replace with translation
-          }
-        });
-
-      removeTranslateIcon();
+      _removeTranslateIcon();
     })
   }
 })
 
+function buildTranslatorContainer(html: string, posX: number, posY: number): HTMLDivElement {
+  const container = document.createElement("div");
+  container.style.position = "absolute";
+
+  container.style.left = `${posX}px`;
+  container.style.top = `${posY}px`;
+  container.innerHTML = html;
+
+  // Set logo
+  const imgTag = container.querySelector('#img-logo') as HTMLImageElement || null;
+  if(imgTag){
+    imgTag.src = chrome.runtime.getURL('assets/resource/translate-icon.png');
+  }
+
+  return container;
+}
+
+async function fetchHtml(templateSrc: string) {
+  const response = await fetch(chrome.runtime.getURL(templateSrc));
+  return response.text();
+}
+
+function closePopUpOnOutsideClick(event: MouseEvent) {
+  const translateIcon = document.getElementById('translate-icon')
+  if (!window.getSelection()?.toString().trim() && translateIcon) {
+    _removeTranslateIcon();
+  }
+
+  const existingTextContainer = document.querySelector('.text-container');
+  if(existingTextContainer && !existingTextContainer.contains(event.target as Node)) {
+    _removeTextContainer();
+  }
+}
+
 function getTranslateIcon(position: Position) {
-  removeTextContainer();
-  removeTranslateIcon();
+  _removeTextContainer();
+  _removeTranslateIcon();
 
   const translateIcon = document.createElement("div");
   translateIcon.id="translate-icon";
@@ -101,7 +110,7 @@ function getTranslateIcon(position: Position) {
   return translateIcon;
 }
 
-function getPositionNearToSelection(): Position {
+function getPositionNearSelection(): Position {
   const range = window.getSelection()?.getRangeAt(0);
   if(!range) {
     throw new Error('There is no selection');
@@ -112,14 +121,14 @@ function getPositionNearToSelection(): Position {
   return {x: rect.left + window.scrollX, y: rect.bottom + window.scrollY + 5}
 }
 
-function removeTextContainer() {
+function _removeTextContainer() {
   const existingTextContainer = document.querySelector('.text-container');
   if(existingTextContainer) {
     existingTextContainer.outerHTML = "";
   }
 }
 
-function removeTranslateIcon() {
+function _removeTranslateIcon() {
   const existingTranslateIcon = document.getElementById("translate-icon");
 
   if(existingTranslateIcon) {

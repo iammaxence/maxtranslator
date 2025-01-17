@@ -1,8 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {readdirSync} = require("node:fs");
 
-// Define the folder containing your HTML files
+// The folder with my components
 const htmlFolder = path.resolve(__dirname, 'src/component');
 
 // Dynamically find all HTML files in the folder
@@ -38,7 +39,7 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg|jpeg|gif|svg)$/i,
-                type: 'asset/resource',
+                type: 'src/assets/resource',
             },
             {
                 test: /\.html$/i,
@@ -46,6 +47,7 @@ module.exports = {
                     {
                         loader: 'html-loader',
                         options: {
+                            sources: true,
                             minimize: true,
                         },
                     },
@@ -54,7 +56,15 @@ module.exports = {
         ],
     },
     plugins: [
-        ...htmlPlugins, // Spread the generated HtmlWebpackPlugin instances here
+        ...htmlPlugins,
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'assets/resource'),
+                    to: 'assets/resource',
+                },
+            ],
+        }),
     ],
     devtool: 'inline-source-map', // set to false in production
 };
