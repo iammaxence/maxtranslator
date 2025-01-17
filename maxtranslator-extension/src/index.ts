@@ -60,9 +60,15 @@ function buildTranslatorContainer(html: string, posX: number, posY: number): HTM
   container.innerHTML = html;
 
   // Set logo
-  const imgTag = container.querySelector('#img-logo') as HTMLImageElement || null;
-  if(imgTag){
-    imgTag.src = chrome.runtime.getURL('assets/resource/translate-icon.png');
+  const imgLogoTag = container.querySelector('#img-logo') as HTMLImageElement || null;
+  if(imgLogoTag){
+    imgLogoTag.src = chrome.runtime.getURL('assets/resource/translate-icon.png');
+  }
+
+  // Set Transfer image
+  const imgTransferTag = container.querySelector('#transfer-img') as HTMLImageElement || null;
+  if(imgTransferTag){
+    imgTransferTag.src = chrome.runtime.getURL('assets/resource/transfer-icon.png');
   }
 
   return container;

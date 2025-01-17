@@ -21,6 +21,12 @@
     padding: 0 1rem;
   }
 
+  .text-container--top--lang-selection-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+  }
+
   .text-container--top--lang--wrapper {
       position: relative;
   }
@@ -57,9 +63,9 @@
 <div class="text-container">
   <div class="text-container--top">
     <img id="img-logo" width="50" height="50" alt="logo">
-    <div>
+    <div class="text-container--top--lang-selection-wrapper">
       <span>auto</span>
-      ->
+      <img id="transfer-img" width="15" height="15" alt="transfer-img">
       <div class="text-container--top--lang--wrapper">
         <span id="selected-lang">french</span>
         <ul id="lang-list" class="text-container--top--lang-list"></ul>
